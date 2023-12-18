@@ -1,0 +1,26 @@
+{
+  "name": "warframe-market-prime-trash-buyer-telegram-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "",
+    "start": "npx tsc && node dist/bot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.10.4",
+    "@types/yargs": "^17.0.32",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@likissdmd/warframe-market-prime-trash-buyer": "^1.0.0",
+    "telegraf": "^4.15.3",
+    "yargs": "^17.7.2"
+  }
+}
