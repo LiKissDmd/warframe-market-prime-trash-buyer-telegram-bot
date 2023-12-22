@@ -1,9 +1,10 @@
 {
-  "name": "warframe-market-prime-trash-buyer-telegram-bot",
+  "name": "@likissdmd/market-prime-trash-buyer-telegram-bot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
+  "bin": "dist/bot.js",
   "scripts": {
     "test": "",
     "start": "npx tsc && node dist/bot.js"
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@likissdmd/warframe-market-prime-trash-buyer": "^1.0.0",
+    "dotenv": "^16.3.1",
     "telegraf": "^4.15.3",
     "yargs": "^17.7.2"
   }

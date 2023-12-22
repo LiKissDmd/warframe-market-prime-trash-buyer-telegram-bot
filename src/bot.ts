@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Telegraf, Context, Markup } from 'telegraf';
 import dotenv from 'dotenv';
 import yargs from 'yargs';
@@ -17,8 +19,7 @@ async function getToken(): Promise<string> {
 
   if (process.env.BOT_TOKEN) return process.env.BOT_TOKEN;
 
-  console.log("Мой токен из енва", process.env.BOT_TOKEN)
-
+ 
 
   const token = await promptToken();
   return token;
@@ -35,6 +36,7 @@ async function promptToken(): Promise<string> {
 async function startBot() {
   const bot = await setupBot();
   bot.launch();
+  console.log("Бот запущен, для остановки нажмите Ctrl+C")
 };
 
 
