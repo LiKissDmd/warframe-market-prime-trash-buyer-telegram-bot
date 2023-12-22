@@ -9,6 +9,7 @@ dotenv.config({ path: '.env.local' });
 startBot();
 
 
+
 async function getToken(): Promise<string> {
   const argv = yargs().options({ token: { type: 'string' } }).parseSync(); // Используйте parseSync
 
@@ -38,11 +39,16 @@ async function startBot() {
 
 
 async function setupBot() {
+  const showKeyboard = Markup.keyboard([['/start', '/help']])
+  .resize()
+  .oneTime();
+
   const token = await getToken();
 
   const bot = new Telegraf(token);
 
   let isCommandExecuting = false;
+
 
   bot.command('start', async (ctx: Context) => {
     if (isCommandExecuting) {
@@ -54,13 +60,9 @@ async function setupBot() {
     isCommandExecuting = true;
 
     try {
-      const keyboard = Markup.keyboard([['/start', '/help']])
-        .resize()
-        .oneTime();
-
-      await ctx.reply(
-        "Подождите, идёт обработка запроса..."
-      );
+      // Скрываем кнопки в начале
+      const hideKeyboard = Markup.removeKeyboard();
+      await ctx.reply("Подождите, идёт обработка запроса...", hideKeyboard);
 
       const allCoolOrders = await getAllCoolOrders();
       const messages = generateMessages(allCoolOrders);
@@ -69,18 +71,24 @@ async function setupBot() {
         await ctx.reply('Нет подходящих запросов на продажу');
       } else {
         for (const message of messages) {
-          await ctx.reply("`" + message + "`", { parse_mode: 'Markdown' })
+          await ctx.reply("`" + message + "`", { parse_mode: 'Markdown' });
         }
       }
 
     } finally {
+      // Показываем кнопки в конце
+      
+      await ctx.reply('Выберите действие:', showKeyboard);
+
       // Сбрасываем флаг после завершения выполнения команды
       isCommandExecuting = false;
     }
   });
 
 
-  bot.command('help', (ctx) => ctx.reply('Логика команды /help здесь'));
+
+
+  bot.command('help', (ctx) => ctx.reply("This bot is used to find valuable orders and generate messages to buy them",showKeyboard));
 
 
   return bot;
