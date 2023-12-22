@@ -6,13 +6,10 @@ import { getAllCoolOrders } from "@likissdmd/warframe-market-prime-trash-buyer";
 
 dotenv.config({ path: '.env.local' });
 
+startBot();
 
-const initBot = async (): Promise<Telegraf<Context>> => {
-  const token = await getToken();
-  return new Telegraf(token);
-};
 
-const getToken = async (): Promise<string> => {
+async function getToken(): Promise<string> {
   const argv = yargs().options({ token: { type: 'string' } }).parseSync(); // Используйте parseSync
 
   if (argv.token) return argv.token as string;
@@ -26,7 +23,7 @@ const getToken = async (): Promise<string> => {
   return token;
 };
 
-const promptToken = async (): Promise<string> => {
+async function promptToken(): Promise<string> {
   console.log('Пожалуйста, введите токен вашего бота:');
   const token = await new Promise<string>((resolve) => {
     process.stdin.once('data', (data) => resolve(data.toString().trim()));
@@ -34,8 +31,13 @@ const promptToken = async (): Promise<string> => {
   return token;
 };
 
+async function startBot() {
+  const bot = await setupBot();
+  bot.launch();
+};
 
-const setupBot = async () => {
+
+async function setupBot() {
   const token = await getToken();
 
   const bot = new Telegraf(token);
@@ -66,8 +68,11 @@ const setupBot = async () => {
       if (messages.length === 0) {
         await ctx.reply('Нет подходящих запросов на продажу');
       } else {
-        await ctx.reply(messages.toString());
+        for (const message of messages) {
+          await ctx.reply("`" + message + "`", { parse_mode: 'Markdown' })
+        }
       }
+
     } finally {
       // Сбрасываем флаг после завершения выполнения команды
       isCommandExecuting = false;
@@ -77,19 +82,6 @@ const setupBot = async () => {
 
   bot.command('help', (ctx) => ctx.reply('Логика команды /help здесь'));
 
-  bot.use(async (ctx, next) => {
-    // Добавить кнопки Start и Help
-    // Комментарий: Кнопки всегда присутствуют
-
-    await next();
-  });
 
   return bot;
 };
-
-const startBot = async () => {
-  const bot = await setupBot();
-  bot.launch();
-};
-
-startBot();
